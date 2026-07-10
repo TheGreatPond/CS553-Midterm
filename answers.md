@@ -1,3 +1,5 @@
+**Part 1.**
+
 1. a. A socket provides a low level endpoint for network communication andis what many network protocols are built on top of.
 b. On top of a socket, HTTP provides a standardized structure to the messages that are being sent over sockets.
 c. Most API's do not directly expose raw socket protocols because the standardation provided by protocols such as http allows users to communicate with the api without as much time learning the ins and outs of the system they are interacting with
@@ -17,5 +19,41 @@ c. The client sent JSON missing a required field - Code 400 would be returned si
 d. The server had an unexpected error - Code 500 would be returned since codes in the 500s are used to say the problem was server side.
 e. A successful request returns JSON data - Code 200 would be used to show that the request was successful.
 
+**Part 2.**
+1. /tasks       - get all tasks with GET HTTP Method
+/tasks/{id}     - get single task by id with GET HTTP Method
+/tasks          - create a new task with the POST HTTP Method
+/tasks/{id}     - replace task with the PUT HTTP Method
+/tasks/{id}     - partially update task with the PATCH HTTP Method
+/tasks/{id}     - delete task with the DELETE HTTP Method
 
+2. /tasks       - get all tasks with GET HTTP Method - SAFE AND IDEMPOTENT
+/tasks/{id}     - get single task by id with GET HTTP Method - SAFE AND IDEMPOTENT
+/tasks          - create a new task with the POST HTTP Method - NOT SAFE OR IDEMPOTENT
+/tasks/{id}     - replace task with the PUT HTTP Method - IDEMPOTENT, BUT NOT SAFE
+/tasks/{id}     - partially update task with the PATCH HTTP Method - NOT SAFE OR IDEMPOTENT
+/tasks/{id}     - delete task with the DELETE HTTP Method - IDEMPOTENT, BUT NOT SAFE
+
+3. json itself on next line, full command as the line below that
+
+'{"title": "Watch Week 4 lecture", "course": "CS453", "completed": true}'
+
+curl -X POST http://localhost:3000/tasks   -H "Content-Type: application/json" -d '{"title": "Watch Week 4 lecture", "course": "CS453", "completed": true}'
+
+**Part 3.**
+
+1.
+
+**Part 4.**
+
+**Part 5.**
+
+**Part 6.**
+
+**Part 6.**
+
+**Part 7.**
+
+**Part 8.**
+d
 
