@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Lab 3 Item API
+  title: Midterm Express Server API
   version: 1.0.0
   description: First Swagger doc, describing basic CRUD operations on a list of items
 
@@ -23,7 +23,7 @@ paths:
                     type: "string"
                     example: "ok"
   # DONE: Document GET /items.
-  /items:
+  /api/tasks:
     get:
       summary: Get list of items
       responses:
@@ -36,23 +36,20 @@ paths:
                 properties:
                   status:
                     type: string
-                    example: [{"id":1,"name":"keyboard","quantity":10},{"id":2,"name":"mouse","quantity":5}]
+                    example: [{"title": "Watch Week 4 lecture", "course": "CS453", "completed": true},{"title": "Watch Week 5 lecture", "course": "CS453", "completed": false},{"title": "task-title-here", "course": "CS123", "completed": false}]
   # DONE: Document POST /items.
     post:
       summary: "Adds new item to list"
       requestBody:
-        description: "needs a name of item and quantity"
+        description: "needs a title, course and completed status"
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ItemInput"
-            example:
-              name: monitor
-              quantity: 12
+              $ref: "#/components/schemas/TaskInput"
       responses:
         "201":
-          description: "Null response"
+          description: "Null response, means that item was created successfully"
         "400":
           description: "Invalid request, item not created"
           content:
@@ -60,7 +57,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorInvalidBody"
 
-  /items/{id}:
+  /api/tasks/{id}:
   # DONE: Document GET /items/{id}.
     get:
       summary: Get item from list
@@ -77,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Item"
+                $ref: "#/components/schemas/Task"
         "404":
           description: "Resource requested not found"
           content:
@@ -96,22 +93,58 @@ paths:
           required: true
           description: Numeric ID of the item to update
       requestBody:
-        description: "needs a name of item and quantity"
+        description: "needs a title, course and completed status"
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ItemInput"
-            example:
-              name: monitor
-              quantity: 12
+              $ref: "#/components/schemas/TaskInput"
+
       responses:
         "200":
           description: Single item returned
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Item"
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: "Resource requested not found and could not be altered"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorNotFound"
+        "400":
+          description: "Invalid request, item not updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorInvalidBody"
+
+  # DONE: Document PUT /items/{id}.
+    patch:
+      summary: Update part of one item in list
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the item to update
+      requestBody:
+        description: "needs a combination of any of the following: title, course, and completed"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskInput"
+
+      responses:
+        "200":
+          description: Single item returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
         "404":
           description: "Resource requested not found and could not be altered"
           content:
@@ -137,7 +170,7 @@ paths:
           description: Numeric ID of the item to delete
       responses:
         "204":
-          description: "Null response"
+          description: "Null response, means item was deleted successfully"
         "404":
           description: "Resource requested not found and therefore not deleted"
           content:
@@ -156,36 +189,50 @@ paths:
 
 components:
   schemas:
-  # DONE: Define an Item schema with id, name, and quantity.
-    Item:
+  # DONE: Define an Item schema with id, title, course and completed.
+    Task:
       type: object
       required:
         - id
-        - name
-        - quantity
+        - title
+        - course
+        - completed
       properties:
         id:
           type: integer
           minimum: 1
-        name:
+        title:
           type: string
-          example: "monitor"
-        quantity:
-          type: integer
-          minimum: 0
-  # DONE: Define an ItemInput schema with name and quantity.
-    ItemInput:
+          example: "task-title-here"
+        course:
+          type: string
+          example: "CS453"
+        completed:
+          type: boolean
+          example: false
+    TaskForPatchInput:
+      type: object
+      properties:
+        course:
+          type: string
+          example: "ENG101"
+  # DONE: Define an TaskInput schema with title, course and completed.
+    TaskInput:
       type: object
       required:
-        - name
-        - quantity
+        - title
+        - course
+        - completed
       properties:
-        name:
+        title:
           type: string
-          example: "monitor"
-        quantity:
-          type: integer
-          minimum: 0
+          example: "task-title-here-2"
+        course:
+          type: string
+          example: "CS453-1"
+        completed:
+          type: boolean
+          example: true
   # DONE: Define an ErrorResponse schema with an error message.
     ErrorNotFound:
       type: object

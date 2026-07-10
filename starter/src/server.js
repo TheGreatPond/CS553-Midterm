@@ -8,27 +8,28 @@ export function createApp() {
   app.use(cors());
   // Starter data. This data is stored in memory and will reset when the
   // server restarts.
-  let nextId = 3;
-  const items = [
-    { id: 1, name: "keyboard", quantity: 10 },
-    { id: 2, name: "mouse", quantity: 5 }
+  let nextId = 4;
+  const tasks = [
+    {"id": 1, "title": "Watch Week 4 lecture", "course": "CS453", "completed": true},
+    {"id": 2, "title": "Watch Week 5 lecture", "course": "CS453", "completed": false},
+    {"id": 3, "title": "task-title-here", "course": "CS123", "completed": false}
   ];
 
   app.get("/health", (req, res) => {
     res.json({ status: "ok" });
   });
 
-  // DONE: Return all items.
-  app.get("/items", (req, res) => {
-    res.json(items);
+  // DONE: Return all tasks.
+  app.get("/api/tasks", (req, res) => {
+    res.json(tasks);
   });
 
   // DONE: Return one item by ID.
-  app.get("/items/:id", (req, res) => {
+  app.get("/api/tasks/:id", (req, res) => {
 
-    let index = items.findIndex(test => test.id == req.params.id);
+    let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
-      const single_item = items.find(test => test.id == req.params.id);
+      const single_item = tasks.find(test => test.id == req.params.id);
       res.json(JSON.stringify(single_item));
     } else {
       res.status(404).json({ error: "Resource requested not found to retrieve" });
@@ -37,15 +38,15 @@ export function createApp() {
   });
 
   // DONE: Create a new item.
-  app.post("/items", (req, res) => {
-  // TODO: Validate input as name and quantity
-    if (req.body.hasOwnProperty('quantity') && req.body.hasOwnProperty('name') && Object.keys(req.body).length === 2){
-      let index = items.findIndex(test => test.id == nextId);
-      items.push({"id":nextId, "name":req.body.name, "quantity":req.body.quantity});
+  app.post("/api/tasks", (req, res) => {
+  // TODO: Validate input as title, course and completed
+    if (req.body.hasOwnProperty('title') && req.body.hasOwnProperty('course') && req.body.hasOwnProperty('completed') && Object.keys(req.body).length === 3){
+      let index = tasks.findIndex(test => test.id == nextId);
+      tasks.push({"id":nextId, "title":req.body.title, "course":req.body.course, "completed":req.body.completed});
       nextId++;
-      res.status(201).json(JSON.stringify(items[index]));
+      res.status(201).json(JSON.stringify(tasks[index]));
     } else {
-      res.status(400).json({ error: "Malformed json, please try again with only keys name and quantity" });
+      res.status(400).json({ error: "Malformed json, please try again with only title, course and completed" });
     }
 
 
@@ -53,28 +54,52 @@ export function createApp() {
   });
 
   // DONE: Update an existing item.
-  app.put("/items/:id", (req, res) => {
-    // TODO: Validate input as id, name and quantity
-    let index = items.findIndex(test => test.id == req.params.id);
+  app.put("/api/tasks/:id", (req, res) => {
+    // DONE: Validate input as id, title, course and completed
+    let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
-      if (req.body.hasOwnProperty('quantity') && req.body.hasOwnProperty('name') && Object.keys(req.body).length === 2){
-          items[index].id = req.params.id;
-          items[index].name = req.body.name;
-          items[index].quantity = req.body.quantity;
-          res.json(JSON.stringify(items[index]));
+      if (req.body.hasOwnProperty('title') && req.body.hasOwnProperty('course') && req.body.hasOwnProperty('completed') && Object.keys(req.body).length === 3){
+          tasks[index].id = req.params.id;
+          tasks[index].title = req.body.title;
+          tasks[index].course = req.body.course;
+          tasks[index].completed = req.body.completed;
+          res.json(JSON.stringify(tasks[index]));
         } else {
-          res.status(400).json({ error: "Malformed json, please try again with only keys name and quantity" });
+          res.status(400).json({ error: "Malformed json, please try again with only keys title, course and completed" });
         }
       } else {
       res.status(404).json({ error: "Resource requested not found to update" });
     }
   });
 
-  // DONE: Delete an existing item.
-  app.delete("/items/:id", (req, res) => {
-    let index = items.findIndex(test => test.id == req.params.id);
+  // DONE: Update an existing item.
+  app.patch("/api/tasks/:id", (req, res) => {
+    let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
-      items.splice(index, 1);
+      if (req.body.hasOwnProperty('title') || req.body.hasOwnProperty('course') || req.body.hasOwnProperty('completed')){
+        if (req.body.hasOwnProperty('title')){
+            tasks[index].title = req.body.title;
+        }
+        if (req.body.hasOwnProperty('course')){
+            tasks[index].course = req.body.course;
+        }
+        if (req.body.hasOwnProperty('completed')){
+            tasks[index].completed = req.body.completed;
+        }
+            res.json(JSON.stringify(tasks[index]));
+      } else {
+        res.status(400).json({ error: "Malformed json, please try again with only keys title, course and completed" });
+      } 
+    } else {
+      res.status(404).json({ error: "Resource requested not found to update" });
+    }
+  });
+
+  // DONE: Delete an existing item.
+  app.delete("/api/tasks/:id", (req, res) => {
+    let index = tasks.findIndex(test => test.id == req.params.id);
+    if (index !== -1) {
+      tasks.splice(index, 1);
       res.status(204).json({ status: "ok" });
     }
     else{
