@@ -1,4 +1,4 @@
-# Midterm express server
+# Midterm express server and client
 
 *THIS IS LARGELY THE LAB 3 THAT WE HAD ALREADY DONE MODIFIED TO FIT THE NEEDS OF THE MIDTERM, HOWEVER OUR MIDTERM DOC SAYS WE CAN USE OUR LABS SO I INTEND TO DO SO*
 
@@ -15,7 +15,7 @@ The server runs on:
 http://localhost:3000
 ```
 
-## How to Test
+## How to Test/ run the client
 
 ```bash
 npm test

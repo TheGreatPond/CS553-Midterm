@@ -66,5 +66,8 @@ See openapi.yaml
 
 **Part 8.**
 
+*Option B.* - If a development team chooses to design the OpenAPI spec before developing the code itself, it allows the team discuss an idealized version of the api for them to work towards. While this upfront planning can lead to a more complete picture since it gives teams a greater focus on planning, if the team fails to implement the plan as written in the openAPI contract, drift will appear. 
 
+In order to avoid drift, teams must spend time testing each route and method within the contract and possibly develop an automated client such as the test we created as part of this midterm that would need to be run to verify that the api is working as intended. If the development team failed to implement appropriate test for the OpenAPI contract, the team would be failing to check for drift in their implementation as development progressed.
 
+On the other hand, if an OpenAPI contract is generated from written code, the contract would be correct and not have drifted from the code, but this process of product before documentation could have led to gaps in coverage on what the application should have been built to do.
