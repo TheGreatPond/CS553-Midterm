@@ -21,54 +21,45 @@ export function createApp() {
   app.get("/health", (req, res) => {
     res.json({ status: "ok" });
     status = 200;
-    
-    const method = "GET";
-    requestLogger(req.path, status, method);
+    requestLogger(req.path, status, req.method);
   });
 
   // DONE: Return all tasks.
   app.get("/api/tasks", (req, res) => {
     res.status(200).json(tasks) 
     status = 200;
-    
-    const method = "GET";
-    requestLogger(req.path, status, method);
+    requestLogger(req.path, status, req.method);
   });
 
   // DONE: Return one item by ID.
   app.get("/api/tasks/:id", (req, res) => {
-
-    const method = "GET";
-
     let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
       const single_item = tasks.find(test => test.id == req.params.id);
       res.json(JSON.stringify(single_item));
       status = 200;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     } else {
       res.status(404).json({ error: "Resource requested not found to retrieve" });
       status = 404;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     }
 
   });
 
   // DONE: Create a new item.
   app.post("/api/tasks", (req, res) => {
-    const path = `/api/tasks`;
-    const method = "POST";
-    if (req.body.hasOwnProperty('title') && req.body.hasOwnProperty('course') && req.body.hasOwnProperty('completed') && Object.keys(req.body).length === 3){
+    if (validatePutOrPostJson(req)){
       let index = tasks.findIndex(test => test.id == nextId);
       tasks.push({"id":nextId, "title":req.body.title, "course":req.body.course, "completed":req.body.completed});
       nextId++;
       res.status(201).json(JSON.stringify(tasks[index]));
       status = 201;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     } else {
       res.status(400).json({ error: "Malformed json, please try again with only title, course and completed" });
       status = 400;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     }
 
 
@@ -77,32 +68,30 @@ export function createApp() {
 
   // DONE: Update an existing item.
   app.put("/api/tasks/:id", (req, res) => {
-    const method = "PUT";
     let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
-      if (req.body.hasOwnProperty('title') && req.body.hasOwnProperty('course') && req.body.hasOwnProperty('completed') && Object.keys(req.body).length === 3){
+      if (validatePutOrPostJson(req)){
           tasks[index].id = req.params.id;
           tasks[index].title = req.body.title;
           tasks[index].course = req.body.course;
           tasks[index].completed = req.body.completed;
           res.json(JSON.stringify(tasks[index]));
           status = 200;
-          requestLogger(req.path, status, method);
+          requestLogger(req.path, status, req.method);
         } else {
           res.status(400).json({ error: "Malformed json, please try again with only keys title, course and completed" });
           status = 400;
-          requestLogger(req.path, status, method);
+          requestLogger(req.path, status, req.method);
         }
       } else {
       res.status(404).json({ error: "Resource requested not found to update" });
       status = 404;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     }
   });
 
   // DONE: Update an existing item.
   app.patch("/api/tasks/:id", (req, res) => {
-    const method = "PATCH";
     let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
       if (req.body.hasOwnProperty('title') || req.body.hasOwnProperty('course') || req.body.hasOwnProperty('completed')){
@@ -117,34 +106,33 @@ export function createApp() {
         }
             res.json(JSON.stringify(tasks[index]));
             status = 200;
-            requestLogger(req.path, status, method);
+            requestLogger(req.path, status, req.method);
       } else {
         res.status(400).json({ error: "Malformed json, please try again with only keys title, course and completed" });
         status = 400;
-        requestLogger(req.path, status, method);
+        requestLogger(req.path, status, req.method);
       } 
     } else {
       res.status(404).json({ error: "Resource requested not found to update" });
       status = 404;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     }
   });
 
   // DONE: Delete an existing item.
   app.delete("/api/tasks/:id", (req, res) => {
-    const method = "PUT";
     let index = tasks.findIndex(test => test.id == req.params.id);
     if (index !== -1) {
       tasks.splice(index, 1);
       res.status(204).json({ status: "ok" });
       status = 204;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     }
     else{
       console.log({ error: "Resource requested not found to delete" });
       res.status(404).json({ error: "Resource requested not found to delete" });
       status = 404;
-      requestLogger(req.path, status, method);
+      requestLogger(req.path, status, req.method);
     }
   });
 
@@ -152,7 +140,7 @@ export function createApp() {
     let method =  req.method;
     res.status(404).json({ error: "Not found" });
     status = 404;
-    requestLogger(req.path, status, method);
+    requestLogger(req.path, status, req.method);
   });
 
 
@@ -184,4 +172,12 @@ export function requestLogger(path, code, method) {
       }
       console.log('request logged successfully!');
   });
+}
+
+export function validatePutOrPostJson(req) {
+  if (req.body.hasOwnProperty('title') && req.body.hasOwnProperty('course') && req.body.hasOwnProperty('completed') && Object.keys(req.body).length === 3){
+    return true;
+  } else {
+    return false;
+  }
 }
