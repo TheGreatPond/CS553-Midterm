@@ -42,18 +42,24 @@ curl -X POST http://localhost:3000/tasks   -H "Content-Type: application/json" -
 
 **Part 3.**
 
-1.
+See source code, this is an adapted version of lab3 since the midterm says that we are allowed to use our labs as a resource
 
 **Part 4.**
 
+The middleware that takes care of repeated functions such as validating json for put and post, as well as the logging function that runs on every request has been moved outside of the routes themselves to prevent inconsistencies in repitions of the code as well as to increase conciseness and readability.
+
 **Part 5.**
 
+again, this is mainly an adapted version of lab3's test, it can be run with the same "npm test" command that is used to test the lab
+
 **Part 6.**
+
+See openapi.yaml
 
 **Part 6.**
 
 **Part 7.**
 
 **Part 8.**
-d
+
 

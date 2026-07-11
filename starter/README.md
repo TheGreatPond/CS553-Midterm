@@ -15,6 +15,11 @@ The server runs on:
 http://localhost:3000
 ```
 
+## How to Test
+
+```bash
+npm test
+```
 
 ## API Routes
 
