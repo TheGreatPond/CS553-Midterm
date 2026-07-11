@@ -56,10 +56,15 @@ again, this is mainly an adapted version of lab3's test, it can be run with the 
 
 See openapi.yaml
 
-**Part 6.**
-
 **Part 7.**
 
+1. The express route implementation is the code itself that is driving the interaction, the openAPI specification is a human and machine readable way of informing the client how the api is intended to be interacted with.
+
+2. The OpenAPI spec and code can drift apart either as developers add features and then fail to update documentation on how to use those features or as features are deprecated and removed from code but the openAPI spec still contains instructions on how to request items that are no longer supported
+
+3. Inaccurate API docs can cause problems for client developers since the developers of the client may spend time troubleshooting a request that has been deprecated and no longer supported in the code even though there is no possible way for them to get it to work since it is a server side issue.
+
 **Part 8.**
+
 
 
